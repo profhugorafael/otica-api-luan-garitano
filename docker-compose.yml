@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  otica-db:
+    image: postgres
+    container_name: otica-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=otica
+      - PGDATA=/data/postgres
+    volumes:
+      - ./data/pg:/data/postgres

@@ -1,6 +1,7 @@
 package br.com.luan.gerenciamentootica.controller;
 
 import br.com.luan.gerenciamentootica.model.Product;
+import br.com.luan.gerenciamentootica.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,27 +22,27 @@ public class ProductController {
 
     // resposta -> headers + body + statusCode
 
-    private static List<Product> products = new ArrayList<>();
+    // [privacidade] [keywords] [variavel/metodo]
+
+    private ProductRepository productRepository;
+
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @GetMapping
     public List<Product> getProducts() {
-        return products;
+        return productRepository.findAll();
     }
 
     @GetMapping("{id}") // /products/1
     public Product getProductById(@PathVariable Long id) {
-        for (Product product : products) {
-            if(product.getId() == id) {
-                return product;
-            }
-        }
-
-        return null;
+        return productRepository.findById(id).get();
     }
 
     @PostMapping
     public void createProduct(@RequestBody Product product) {
-        products.add(product);
+        productRepository.save(product);
     }
 
 }
