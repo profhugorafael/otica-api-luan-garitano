@@ -1,16 +1,14 @@
 package br.com.luan.gerenciamentootica.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
 @Entity
 @Table(name = "products")
+@Builder
 public class Product {
 
     @Id
