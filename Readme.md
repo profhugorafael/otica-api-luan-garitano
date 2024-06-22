@@ -35,3 +35,10 @@ class Arco {
     private int numeroDeFlechas;
 }
 ```
+
+## Ordem recomendada
+
+- Model: Product
+- Repository (acesso ao DB): ProductRepository
+- Service(regras e logicas): ProductService
+- Controller(fornece as funcionalidas): ProductController

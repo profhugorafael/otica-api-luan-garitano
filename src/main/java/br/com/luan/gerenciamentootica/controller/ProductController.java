@@ -2,51 +2,51 @@ package br.com.luan.gerenciamentootica.controller;
 
 import br.com.luan.gerenciamentootica.model.Product;
 import br.com.luan.gerenciamentootica.repository.ProductRepository;
+import br.com.luan.gerenciamentootica.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("products")
 public class ProductController {
 
-    private ProductRepository productRepository;
+    private ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productService.getAll();
 
-        if (products.isEmpty()) {
+        if (products.isEmpty())
             return ResponseEntity.noContent().build();
-        }
 
         return ResponseEntity.ok(products); // Response.status().body();
     }
 
-
     @GetMapping("{id}") // /products/1
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> searchByProduct = productRepository.findById(id);
-
-        if (searchByProduct.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            return ResponseEntity.ok(productService.getById(id));
+        } catch (IllegalArgumentException err) {
+            return ResponseEntity.badRequest().build();
         }
-
-        Product product = searchByProduct.get();
-        return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody Product product) {
-        productRepository.save(product);
+    public ResponseEntity createProduct(@RequestBody Product productRequest) {
+        try {
+            productService.create(productRequest);
+        } catch (IllegalArgumentException err) {
+            return ResponseEntity.badRequest().build();
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
